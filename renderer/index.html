@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://avatars.steamstatic.com https://*.akamaihd.net https://*.steamstatic.com data:; connect-src https://api.opendota.com">
+  <title>Dota Today</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="widget">
+    <header class="titlebar">
+      <img id="avatar" class="avatar" alt="" hidden>
+      <span id="nickname" class="nickname">Dota Today</span>
+      <div class="controls">
+        <button id="btn-refresh" title="Оновити">⟳</button>
+        <button id="btn-compact" title="Компактний режим">▭</button>
+        <button id="btn-pin" title="Поверх усіх вікон">📌</button>
+        <button id="btn-settings" title="Змінити гравця">⚙</button>
+        <button id="btn-min" title="Згорнути">—</button>
+        <button id="btn-close" title="Закрити">✕</button>
+      </div>
+    </header>
+
+    <section id="view-setup" class="setup" hidden>
+      <label for="id-input">ID гравця або посилання на профіль</label>
+      <input id="id-input" type="text" placeholder="напр. 123456789" spellcheck="false" autocomplete="off">
+      <div class="setup-actions">
+        <button id="btn-cancel" class="secondary" hidden>Скасувати</button>
+        <button id="btn-save" class="primary">Зберегти</button>
+      </div>
+      <p id="setup-error" class="error" hidden></p>
+      <p class="hint">Підходить Steam32 ID, Steam64 ID або посилання opendota.com / dotabuff.com / steamcommunity.com/profiles/…<br>
+        У Dota 2 має бути увімкнено «Expose Public Match Data».</p>
+    </section>
+
+    <section id="view-stats" class="stats" hidden>
+      <div class="score">
+        <div class="score-part win"><span id="wins">0</span><small>W</small></div>
+        <div class="score-sep">:</div>
+        <div class="score-part loss"><span id="losses">0</span><small>L</small></div>
+      </div>
+      <div id="summary" class="summary">Сьогодні ще не грали</div>
+      <ul id="matches" class="matches"></ul>
+    </section>
+
+    <div id="compact" class="mini-bar">
+      <span class="c-win"><b id="c-wins">0</b>W</span>
+      <span class="c-sep">:</span>
+      <span class="c-loss"><b id="c-losses">0</b>L</span>
+      <span id="c-dot" class="c-dot" hidden></span>
+      <button id="btn-expand" title="Розгорнути">⤢</button>
+    </div>
+
+    <footer class="status">
+      <span id="status-text"></span>
+    </footer>
+  </div>
+
+  <script src="core.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "dota-stats",
+  "version": "1.0.0",
+  "description": "Desktop-віджет: перемоги та поразки в Dota 2 за сьогодні (OpenDota API)",
+  "main": "main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "electron": "^45.2.3"
+  }
+}
