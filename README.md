@@ -1,74 +1,74 @@
 # Dota Today
 
-Невеликий desktop-віджет (Electron), що показує кількість виграних і програних ігор у Dota 2 **за сьогодні** (з 00:00 за локальним часом). Дані беруться з безкоштовного [OpenDota API](https://docs.opendota.com/) — ключ не потрібен.
+A small desktop widget (Electron) that shows how many Dota 2 games you won and lost **today** (since 00:00 local time). Data comes from the free [OpenDota API](https://docs.opendota.com/), so no API key is needed.
 
-## Як запустити
+## How to run
 
-### 1. Встановіть Node.js (один раз)
+### 1. Install Node.js (once)
 
-Потрібен Node.js версії 18 або новішої. Завантажте LTS-версію з [nodejs.org](https://nodejs.org/) і встановіть із налаштуваннями за замовчуванням.
+You need Node.js 18 or newer. Download the LTS version from [nodejs.org](https://nodejs.org/) and install it with the default settings.
 
-Перевірити, що все встановилося, можна в терміналі (PowerShell або «Командний рядок»):
+To check that it is installed, run this in a terminal (PowerShell or Command Prompt):
 
 ```bash
 node -v
 ```
 
-Має з'явитися номер версії, наприклад `v22.21.0`.
+You should see a version number, for example `v22.21.0`.
 
-### 2. Відкрийте термінал у папці проєкту
+### 2. Open a terminal in the project folder
 
-Наприклад, у PowerShell:
+For example, in PowerShell:
 
 ```bash
 cd D:\web\dota-stats
 ```
 
-Або відкрийте папку в Провіднику, клацніть в адресному рядку, введіть `powershell` і натисніть Enter.
+Or open the folder in File Explorer, click the address bar, type `powershell` and press Enter.
 
-### 3. Встановіть залежності (один раз)
+### 3. Install dependencies (once)
 
 ```bash
 npm install
 ```
 
-Ця команда завантажить Electron (близько 100 МБ) у папку `node_modules`. Повторювати її потрібно лише після видалення `node_modules` або зміни `package.json`.
+This downloads Electron (about 100 MB) into the `node_modules` folder. You only need to run it again if you delete `node_modules` or change `package.json`.
 
-### 4. Запустіть віджет
+### 4. Start the widget
 
 ```bash
 npm start
 ```
 
-Відкриється невелике вікно віджета. Щоб закрити його, натисніть ✕ у заголовку вікна або `Ctrl+C` у терміналі.
+A small widget window opens. To close it, click ✕ in the window's title bar or press `Ctrl+C` in the terminal.
 
-Далі для запуску достатньо кроків 2 і 4.
+After the first time, steps 2 and 4 are enough to start it.
 
-### Тести
+### Tests
 
-Перевірка логіки (розпізнавання ID, підрахунок перемог):
+Checks the logic (ID parsing, win/loss counting):
 
 ```bash
 npm test
 ```
 
-### Якщо щось не працює
+### Troubleshooting
 
-- **`npm` не розпізнається як команда.** Node.js не встановлено або термінал відкрили до встановлення. Перевстановіть Node.js і відкрийте новий термінал.
-- **`Electron failed to install correctly`.** Видаліть папку `node_modules` і знову виконайте `npm install`.
-- **Віджет показує «Профіль не знайдено або приховано».** Увімкніть у Dota 2 **Expose Public Match Data** (див. нижче) і зіграйте хоча б один матч після цього.
+- **`npm` is not recognized as a command.** Node.js is not installed, or the terminal was opened before installing it. Reinstall Node.js and open a new terminal.
+- **`Electron failed to install correctly`.** Delete the `node_modules` folder and run `npm install` again.
+- **The widget says "Profile not found or private".** Enable **Expose Public Match Data** in Dota 2 (see below) and play at least one match after that.
 
-## Як користуватися
+## How to use
 
-1. При першому запуску введіть ID гравця. Підходить:
+1. On first launch, enter a player ID. Accepted formats:
    - Steam32 / Dota ID (`86745912`);
    - Steam64 ID (`76561198047011640`);
-   - посилання `opendota.com/players/…`, `dotabuff.com/players/…`, `stratz.com/players/…`, `steamcommunity.com/profiles/…`.
-   Посилання з нікнеймом (`steamcommunity.com/id/name`) не підтримується — для нього потрібен Steam API key.
-2. У самій Dota 2 має бути увімкнено **Settings → Social → Expose Public Match Data**, інакше OpenDota не бачить матчі.
-3. Кнопки у заголовку: ⟳ — оновити (і попросити OpenDota підтягнути свіжі матчі), 📌 — поверх усіх вікон, ⚙ — змінити гравця, — згорнути, ✕ закрити.
-4. Клік по матчу відкриває його на opendota.com.
-5. Кнопка ▭ вмикає **компактний режим**: маленька плашка 150×44 лише з рахунком `W : L`. Її можна перетягувати за будь-яке місце; щоб повернути повний вигляд, наведіть курсор і натисніть ⤢ праворуч. Червона крапка ліворуч означає помилку оновлення (текст видно в підказці при наведенні). Режим запам'ятовується між запусками.
+   - links like `opendota.com/players/…`, `dotabuff.com/players/…`, `stratz.com/players/…`, `steamcommunity.com/profiles/…`.
+   Custom URLs (`steamcommunity.com/id/name`) are not supported, because resolving them needs a Steam API key.
+2. In Dota 2, **Settings → Social → Expose Public Match Data** must be enabled, otherwise OpenDota cannot see your matches.
+3. Title bar buttons: ⟳ refresh (and ask OpenDota to fetch fresh matches), ▭ compact mode, 📌 always on top, ⚙ change player, — minimize, ✕ close.
+4. Click a match to open it on opendota.com.
+5. **Compact mode** (▭) shrinks the widget to a 150×44 bar with only the `W : L` score. Drag it from anywhere; to go back to the full view, hover over it and click ⤢ on the right. A red dot on the left means the last refresh failed (hover to see the error). The mode is remembered between launches.
 
-Віджет оновлюється сам кожні 3 хвилини. Нові матчі з'являються в OpenDota зазвичай через кілька хвилин після завершення гри.
-Налаштування (ID, позиція вікна, «поверх вікон») зберігаються в `%APPDATA%\dota-stats\settings.json`.
+The widget refreshes itself every 3 minutes. New matches usually appear on OpenDota a few minutes after the game ends.
+Settings (player ID, window position, always on top, compact mode) are stored in `%APPDATA%\dota-stats\settings.json`.

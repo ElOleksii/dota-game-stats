@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="uk">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="Content-Security-Policy"
@@ -13,25 +13,25 @@
       <img id="avatar" class="avatar" alt="" hidden>
       <span id="nickname" class="nickname">Dota Today</span>
       <div class="controls">
-        <button id="btn-refresh" title="Оновити">⟳</button>
-        <button id="btn-compact" title="Компактний режим">▭</button>
-        <button id="btn-pin" title="Поверх усіх вікон">📌</button>
-        <button id="btn-settings" title="Змінити гравця">⚙</button>
-        <button id="btn-min" title="Згорнути">—</button>
-        <button id="btn-close" title="Закрити">✕</button>
+        <button id="btn-refresh" title="Refresh">⟳</button>
+        <button id="btn-compact" title="Compact mode">▭</button>
+        <button id="btn-pin" title="Always on top">📌</button>
+        <button id="btn-settings" title="Change player">⚙</button>
+        <button id="btn-min" title="Minimize">—</button>
+        <button id="btn-close" title="Close">✕</button>
       </div>
     </header>
 
     <section id="view-setup" class="setup" hidden>
-      <label for="id-input">ID гравця або посилання на профіль</label>
-      <input id="id-input" type="text" placeholder="напр. 123456789" spellcheck="false" autocomplete="off">
+      <label for="id-input">Player ID or profile link</label>
+      <input id="id-input" type="text" placeholder="e.g. 123456789" spellcheck="false" autocomplete="off">
       <div class="setup-actions">
-        <button id="btn-cancel" class="secondary" hidden>Скасувати</button>
-        <button id="btn-save" class="primary">Зберегти</button>
+        <button id="btn-cancel" class="secondary" hidden>Cancel</button>
+        <button id="btn-save" class="primary">Save</button>
       </div>
       <p id="setup-error" class="error" hidden></p>
-      <p class="hint">Підходить Steam32 ID, Steam64 ID або посилання opendota.com / dotabuff.com / steamcommunity.com/profiles/…<br>
-        У Dota 2 має бути увімкнено «Expose Public Match Data».</p>
+      <p class="hint">Accepts a Steam32 ID, Steam64 ID, or a link from opendota.com / dotabuff.com / steamcommunity.com/profiles/…<br>
+        "Expose Public Match Data" must be enabled in Dota 2.</p>
     </section>
 
     <section id="view-stats" class="stats" hidden>
@@ -40,7 +40,7 @@
         <div class="score-sep">:</div>
         <div class="score-part loss"><span id="losses">0</span><small>L</small></div>
       </div>
-      <div id="summary" class="summary">Сьогодні ще не грали</div>
+      <div id="summary" class="summary">No games played today</div>
       <ul id="matches" class="matches"></ul>
     </section>
 
@@ -49,7 +49,7 @@
       <span class="c-sep">:</span>
       <span class="c-loss"><b id="c-losses">0</b>L</span>
       <span id="c-dot" class="c-dot" hidden></span>
-      <button id="btn-expand" title="Розгорнути">⤢</button>
+      <button id="btn-expand" title="Expand">⤢</button>
     </div>
 
     <footer class="status">

@@ -1,7 +1,7 @@
 {
   "name": "dota-stats",
   "version": "1.0.0",
-  "description": "Desktop-віджет: перемоги та поразки в Dota 2 за сьогодні (OpenDota API)",
+  "description": "Desktop widget showing today's Dota 2 wins and losses (OpenDota API)",
   "main": "main.js",
   "private": true,
   "scripts": {

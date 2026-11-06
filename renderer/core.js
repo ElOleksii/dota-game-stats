@@ -1,16 +1,16 @@
-// Чиста логіка без DOM — працює і в браузері (window.DotaCore), і в Node (тести).
+// Pure logic with no DOM: works in the browser (window.DotaCore) and in Node (tests).
 (function (root) {
   const STEAM64_BASE = 76561197960265728n;
   const STEAM32_MAX = 4294967295n;
 
-  // Перетворює ID або посилання на account_id (Steam32) у вигляді рядка.
-  // Повертає { id } або { error }.
+  // Converts an ID or profile link to an account_id (Steam32) string.
+  // Returns { id } or { error }.
   function parseAccountInput(input) {
     const text = String(input ?? '').trim();
-    if (!text) return { error: 'Вкажіть ID гравця.' };
+    if (!text) return { error: 'Enter a player ID.' };
 
     if (/steamcommunity\.com\/id\//i.test(text)) {
-      return { error: 'Посилання з нікнеймом (steamcommunity.com/id/…) не підтримується. Вкажіть числовий ID або посилання /profiles/….' };
+      return { error: 'Custom URLs (steamcommunity.com/id/…) are not supported. Enter a numeric ID or a /profiles/… link.' };
     }
 
     let digits = null;
@@ -22,15 +22,15 @@
       if (steamId3) digits = steamId3[1];
     }
 
-    if (!digits) return { error: 'Не вдалося розпізнати ID. Приклад: 123456789 або посилання на профіль OpenDota/Dotabuff/Steam.' };
+    if (!digits) return { error: 'Could not recognize the ID. Example: 123456789 or an OpenDota/Dotabuff/Steam profile link.' };
 
     let n = BigInt(digits);
     if (n >= STEAM64_BASE) n -= STEAM64_BASE;
-    if (n <= 0n || n > STEAM32_MAX) return { error: 'Некоректний ID гравця.' };
+    if (n <= 0n || n > STEAM32_MAX) return { error: 'Invalid player ID.' };
     return { id: n.toString() };
   }
 
-  // Чи виграв гравець матч. null — якщо результат невідомий.
+  // Whether the player won the match; null if the result is unknown.
   function isWin(match) {
     if (match == null || match.radiant_win == null || match.player_slot == null) return null;
     const isRadiant = match.player_slot < 128;

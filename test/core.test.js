@@ -2,7 +2,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const core = require('../renderer/core.js');
 
-test('parseAccountInput: різні формати дають той самий Steam32 ID', () => {
+test('parseAccountInput: all formats give the same Steam32 ID', () => {
   const expected = '86745912';
   for (const input of [
     '86745912',
@@ -18,12 +18,12 @@ test('parseAccountInput: різні формати дають той самий 
   }
 });
 
-test('parseAccountInput: помилки', () => {
+test('parseAccountInput: errors', () => {
   assert.ok(core.parseAccountInput('').error);
   assert.ok(core.parseAccountInput('https://steamcommunity.com/id/somename').error);
   assert.ok(core.parseAccountInput('hello').error);
   assert.ok(core.parseAccountInput('0').error);
-  assert.ok(core.parseAccountInput('99999999999').error); // > 2^32, але не Steam64
+  assert.ok(core.parseAccountInput('99999999999').error); // > 2^32 but not a Steam64 ID
 });
 
 test('isWin: Radiant/Dire', () => {
@@ -38,11 +38,11 @@ test('filterToday + summarize', () => {
   const now = new Date(2026, 10, 6, 15, 0, 0);
   const midnight = new Date(2026, 10, 6, 0, 0, 0).getTime() / 1000;
   const matches = [
-    { start_time: midnight - 60, player_slot: 0, radiant_win: true },   // вчора
+    { start_time: midnight - 60, player_slot: 0, radiant_win: true },   // yesterday
     { start_time: midnight, player_slot: 0, radiant_win: true },        // W
     { start_time: midnight + 3600, player_slot: 130, radiant_win: true }, // L
     { start_time: midnight + 7200, player_slot: 130, radiant_win: false }, // W
-    { start_time: midnight + 9000, player_slot: 2, radiant_win: null },  // невідомо
+    { start_time: midnight + 9000, player_slot: 2, radiant_win: null },  // unknown
   ];
   const today = core.filterToday(matches, now);
   assert.equal(today.length, 4);

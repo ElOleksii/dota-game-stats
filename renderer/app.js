@@ -28,7 +28,7 @@
   function setStatus(text, isError = false) {
     el.status.textContent = text;
     el.status.parentElement.classList.toggle('error', isError);
-    // У компактному режимі помилку видно як червону крапку, текст — у підказці.
+    // In compact mode an error shows as a red dot; the text is in the tooltip.
     el.cDot.hidden = !isError;
     el.compact.title = text;
   }
@@ -59,10 +59,10 @@
     try {
       res = await fetch(API + path, options);
     } catch {
-      throw new ApiError(0, 'Немає зʼєднання з OpenDota');
+      throw new ApiError(0, 'Cannot reach OpenDota');
     }
-    if (res.status === 429) throw new ApiError(429, 'Ліміт запитів OpenDota — спробую пізніше');
-    if (!res.ok) throw new ApiError(res.status, `OpenDota відповів помилкою ${res.status}`);
+    if (res.status === 429) throw new ApiError(429, 'OpenDota rate limit reached, will retry later');
+    if (!res.ok) throw new ApiError(res.status, `OpenDota returned error ${res.status}`);
     return res.json();
   }
 
@@ -79,11 +79,11 @@
       heroes = map;
       storageSet(HEROES_KEY, { savedAt: Date.now(), map });
     } catch {
-      if (cached && cached.map) heroes = cached.map; // старий кеш краще, ніж нічого
+      if (cached && cached.map) heroes = cached.map; // a stale cache is better than nothing
     }
   }
 
-  const timeFmt = new Intl.DateTimeFormat('uk-UA', { hour: '2-digit', minute: '2-digit' });
+  const timeFmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit' });
 
   // ---------- views ----------
   function showSetup(prefill = '') {
@@ -118,8 +118,8 @@
     const stats = summarize(todayMatches);
     setCounts(stats.wins, stats.losses);
     el.summary.textContent = stats.total
-      ? `${stats.total} ${plural(stats.total, 'гра', 'гри', 'ігор')} · винрейт ${stats.winrate}%`
-      : 'Сьогодні ще не грали';
+      ? `${stats.total} ${stats.total === 1 ? 'game' : 'games'} · ${stats.winrate}% win rate`
+      : 'No games played today';
 
     el.matches.replaceChildren(...todayMatches
       .slice()
@@ -128,7 +128,7 @@
         const w = isWin(m);
         const li = document.createElement('li');
         li.className = 'match ' + (w === true ? 'win' : w === false ? 'loss' : 'unknown');
-        li.title = 'Відкрити матч на OpenDota';
+        li.title = 'Open match on OpenDota';
 
         const res = document.createElement('span');
         res.className = 'res';
@@ -136,7 +136,7 @@
 
         const hero = document.createElement('span');
         hero.className = 'hero';
-        hero.textContent = heroes[m.hero_id] || `Герой #${m.hero_id}`;
+        hero.textContent = heroes[m.hero_id] || `Hero #${m.hero_id}`;
 
         const kda = document.createElement('span');
         kda.className = 'kda';
@@ -152,20 +152,13 @@
       }));
   }
 
-  function plural(n, one, few, many) {
-    const mod10 = n % 10, mod100 = n % 100;
-    if (mod10 === 1 && mod100 !== 11) return one;
-    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
-    return many;
-  }
-
   // ---------- data ----------
   async function refresh({ manual = false } = {}) {
     if (!accountId) return;
     const seq = ++requestSeq;
     const id = accountId;
     el.btnRefresh.classList.add('spinning');
-    setStatus('Оновлення…');
+    setStatus('Updating…');
 
     try {
       if (!Object.keys(heroes).length) await loadHeroes();
@@ -173,27 +166,27 @@
         getJson(`/players/${id}`),
         getJson(`/players/${id}/matches?date=1&significant=0`),
       ]);
-      if (seq !== requestSeq) return; // поки чекали, гравця змінили або стартував новий запит
+      if (seq !== requestSeq) return; // the player changed or a newer request started while waiting
 
       if (!player || !player.profile) {
         renderProfile(null);
         renderMatches([]);
-        setStatus('Профіль не знайдено або приховано. Увімкніть «Expose Public Match Data».', true);
+        setStatus('Profile not found or private. Enable "Expose Public Match Data".', true);
         return;
       }
 
       renderProfile(player.profile);
       renderMatches(filterToday(matches));
-      setStatus(`Оновлено о ${timeFmt.format(new Date())}`);
+      setStatus(`Updated at ${timeFmt.format(new Date())}`);
 
       if (manual) {
-        // Просимо OpenDota підтягнути свіжі матчі зі Steam і перечитуємо трохи згодом.
+        // Ask OpenDota to fetch fresh matches from Steam, then reload a bit later.
         fetch(`${API}/players/${id}/refresh`, { method: 'POST' }).catch(() => {});
         setTimeout(() => { if (seq === requestSeq) refresh(); }, 15000);
       }
     } catch (err) {
       if (seq !== requestSeq) return;
-      setStatus(err.message || 'Помилка завантаження', true);
+      setStatus(err.message || 'Failed to load data', true);
     } finally {
       if (seq === requestSeq) el.btnRefresh.classList.remove('spinning');
     }
@@ -241,7 +234,7 @@
     el.btnPin.classList.toggle('active', onTop);
   });
 
-  // Після сну/повернення у вікно — одразу оновити (може вже бути новий день).
+  // After sleep or when the window becomes visible again, refresh right away (it may be a new day).
   document.addEventListener('visibilitychange', () => {
     if (!document.hidden) refresh();
   });
@@ -260,7 +253,7 @@
       refresh();
     } else {
       showSetup();
-      setStatus('Вкажіть гравця, щоб почати');
+      setStatus('Enter a player to get started');
     }
   })();
 })();
